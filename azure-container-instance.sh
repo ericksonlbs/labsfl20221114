@@ -40,5 +40,6 @@ az container create \
     --azure-file-volume-account-key $STORAGE_KEY \
     --azure-file-volume-share-name $ACI_PERS_SHARE_NAME \
     --azure-file-volume-mount-path /labsfl20221114/test/ \
+    --environment-variables 'REPEAT':'10' \
 	--cpu 2 \
 	--memory 8
