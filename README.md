@@ -42,4 +42,4 @@ docker run --name labsfl20221114 --env REPEAT=10 --rm -v /tmp/labsfl20221114:/la
 ```
 
 ## Running the container on Azure Container Instance
-O file [azure-container-instance.sh](azure-container-instance.sh) contain script with created resources to running container on **Azure Container Instance**, this script using [Azure CLI](https://learn.microsoft.com/pt-br/cli/azure/), then can you to execute on Cloud Shell from Azure Portal or install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and to run locally.
+O file [azure-container-instance.sh](azure-container-instance.sh) contain script with created resources to running container on **Azure Container Instance**, this script using [Azure CLI](https://learn.microsoft.com/pt-br/cli/azure/), then can you to execute on Cloud Shell from Azure Portal or install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and to run locally. PS.: Change the four parameters as needed in the file [azure-container-instance.sh](azure-container-instance.sh).
