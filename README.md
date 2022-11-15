@@ -4,9 +4,9 @@
 This laboratory aim to test the execution time from [Flacoco](https://github.com/SpoonLabs/flacoco), [Jaguar](https://github.com/saeg/jaguar) and [Jaguar2](https://github.com/saeg/jaguar2), in the projects: "Time", "Jsoap", "Lang", "Gson", "Csv" and "Collections", from dataset [Defects4J](https://github.com/rjust/defects4j).
 
 ## Available
-To running this laboratory, was created container image and available in Docker Hub, on address ericksonlbs/labsfl20221114, but it is also possible to build image through this repository.
+To running this laboratory, was created container image and available in Docker Hub, on address ericksonlbs/labsfl20221114, but it is also possible to build image through this repository. Also it's available a script to running container on cloud, on service **AZURE CONTAINER INSTANCE** from Microsoft Azure.
 
-## Running through the container available in the Docker Hub
+## Running the container available in the Docker Hub
 STEP 1: Pull image `ericksonlbs/labsfl20221114:latest` from Docker Hub.
 ```
 docker pull ericksonlbs/labsfl20221114:latest
@@ -40,3 +40,6 @@ The parameter `REPEAT` set an environment variable to define amount repeat will 
 ```
 docker run --name labsfl20221114 --env REPEAT=10 --rm -v /tmp/labsfl20221114:/labsfl20221114/test labsfl20221114:latest
 ```
+
+## Running the container on Azure Container Instance
+O file [azure-container-instance.sh](azure-container-instance.sh) contain script with created resources to running container on **Azure Container Instance**, this script using [Azure CLI](https://learn.microsoft.com/pt-br/cli/azure/), then can you to execute on Cloud Shell from Azure Portal or install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and to run locally. PS.: Change the four parameters as needed in the file [azure-container-instance.sh](azure-container-instance.sh).
