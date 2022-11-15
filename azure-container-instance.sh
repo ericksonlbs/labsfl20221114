@@ -8,6 +8,11 @@ ACI_PERS_SHARE_NAME=container
 
 #STORAGE_KEY=w7VhOzLUGCcDLDvXCE3HGDnbJNuS9oiSDzzHpjBeEN8WceFGxqF2XVzt4uGdo36wOMvjAfrbU23R+CDtG2hHUw==
 
+#Create the resource group
+az group create \
+    -l $ACI_PERS_LOCATION \
+    -n $ACI_PERS_RESOURCE_GROUP
+
 # Create the storage account with the parameters
 az storage account create \
     --resource-group $ACI_PERS_RESOURCE_GROUP \
