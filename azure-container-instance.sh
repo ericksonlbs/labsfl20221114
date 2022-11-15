@@ -1,9 +1,13 @@
 #!/bin/sh
 
 # Change these four parameters as needed
+# Resource group name
 ACI_PERS_RESOURCE_GROUP=labsfl20221114VM
+# Storage account name
 ACI_PERS_STORAGE_ACCOUNT_NAME=labsfl20221114storage
+# Location
 ACI_PERS_LOCATION=eastus
+# Share name
 ACI_PERS_SHARE_NAME=container
 
 #Create the resource group
