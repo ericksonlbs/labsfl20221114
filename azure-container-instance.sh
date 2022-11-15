@@ -6,8 +6,6 @@ ACI_PERS_STORAGE_ACCOUNT_NAME=labsfl20221114storage
 ACI_PERS_LOCATION=eastus
 ACI_PERS_SHARE_NAME=container
 
-#STORAGE_KEY=w7VhOzLUGCcDLDvXCE3HGDnbJNuS9oiSDzzHpjBeEN8WceFGxqF2XVzt4uGdo36wOMvjAfrbU23R+CDtG2hHUw==
-
 #Create the resource group
 az group create \
     -l $ACI_PERS_LOCATION \
@@ -24,6 +22,9 @@ az storage account create \
 az storage share create \
   --name $ACI_PERS_SHARE_NAME \
   --account-name $ACI_PERS_STORAGE_ACCOUNT_NAME
+
+# Get Storage Key
+STORAGE_KEY=$(az storage account keys list --resource-group $ACI_PERS_RESOURCE_GROUP --account-name $ACI_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" --output tsv)
 
 az container create \
     --resource-group $ACI_PERS_RESOURCE_GROUP \
