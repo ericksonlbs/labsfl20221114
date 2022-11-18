@@ -37,6 +37,13 @@ RUN mvn clean install --projects '!jaguar2-examples,!jaguar2-examples/jaguar2-ex
 WORKDIR /
 RUN rm -rf jaguar2
 
+#install GZoltar
+RUN git clone https://github.com/GZoltar/gzoltar
+WORKDIR /gzoltar
+RUN mvn clean install -Dmaven.test.skip
+WORKDIR /
+RUN rm -rf gzoltar
+
 #copy files
 COPY projects labsfl20221114/projects
 COPY run.sh labsfl20221114
