@@ -37,9 +37,9 @@ az container create \
     --dns-name-label labsfl20221114-aci \
     --ports 80 \
     --azure-file-volume-account-name $ACI_PERS_STORAGE_ACCOUNT_NAME \
-    --azure-file-volume-account-key $STORAGE_KEY \
+    --azure-file-volume-account-key "$STORAGE_KEY" \
     --azure-file-volume-share-name $ACI_PERS_SHARE_NAME \
     --azure-file-volume-mount-path /labsfl20221114/test/ \
-    --environment-variables 'REPEAT':'10' \
+    --environment-variables 'REPEAT'='10' \
 	--cpu 2 \
 	--memory 8
