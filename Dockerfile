@@ -8,7 +8,7 @@ ENV REPEAT=${REPEAT}
 RUN apt-get update -y
 
 # Install dependencies
-RUN apt-get install -y git maven uuid-runtime
+RUN apt-get install -y git maven uuid-runtime zip
 
 #install Jaguar
 RUN git clone https://github.com/saeg/jaguar
@@ -33,7 +33,7 @@ RUN rm -rf flacoco
 #install Jaguar2
 RUN git clone https://github.com/saeg/jaguar2
 WORKDIR /jaguar2
-RUN mvn clean install --projects '!jaguar2-examples,!jaguar2-examples/jaguar2-example-junit,!jaguar2-examples/jaguar2-example-junit-jacoco,!jaguar2-examples/jaguar2-example-junit-ba-dua'  -Dmaven.test.skip
+RUN mvn clean install --projects '!jaguar2-examples,!jaguar2-validations,!jaguar2-examples/jaguar2-example-junit,!jaguar2-examples/jaguar2-example-junit-jacoco,!jaguar2-examples/jaguar2-example-junit-ba-dua'  -Dmaven.test.skip
 WORKDIR /
 RUN rm -rf jaguar2
 
