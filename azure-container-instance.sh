@@ -2,7 +2,7 @@
 
 # Change these four parameters as needed
 # Resource group name
-ACI_PERS_RESOURCE_GROUP=labsfl20221114VM
+ACI_PERS_RESOURCE_GROUP="labsfl20221114_$(date +%Y-%m-%d_%H-%M-%S)"
 # Storage account name
 ACI_PERS_STORAGE_ACCOUNT_NAME=labsfl20221114storage
 # Location
@@ -13,11 +13,11 @@ ACI_PERS_SHARE_NAME=container
 #Create the resource group
 az group create \
     -l $ACI_PERS_LOCATION \
-    -n $ACI_PERS_RESOURCE_GROUP
+    -n "$ACI_PERS_RESOURCE_GROUP"
 
 # Create the storage account with the parameters
 az storage account create \
-    --resource-group $ACI_PERS_RESOURCE_GROUP \
+    --resource-group "$ACI_PERS_RESOURCE_GROUP" \
     --name $ACI_PERS_STORAGE_ACCOUNT_NAME \
     --location $ACI_PERS_LOCATION \
     --sku Standard_LRS
@@ -28,10 +28,10 @@ az storage share create \
   --account-name $ACI_PERS_STORAGE_ACCOUNT_NAME
 
 # Get Storage Key
-STORAGE_KEY=$(az storage account keys list --resource-group $ACI_PERS_RESOURCE_GROUP --account-name $ACI_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" --output tsv)
+STORAGE_KEY=$(az storage account keys list --resource-group "$ACI_PERS_RESOURCE_GROUP" --account-name $ACI_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" --output tsv)
 
 az container create \
-    --resource-group $ACI_PERS_RESOURCE_GROUP \
+    --resource-group "$ACI_PERS_RESOURCE_GROUP" \
     --name labsfl20221114 \
     --image ericksonlbs/labsfl20221114:latest \
     --dns-name-label labsfl20221114-aci \
@@ -41,5 +41,6 @@ az container create \
     --azure-file-volume-share-name $ACI_PERS_SHARE_NAME \
     --azure-file-volume-mount-path /labsfl20221114/test/ \
     --environment-variables 'REPEAT'='10' \
+    --restart-policy Never \
 	--cpu 2 \
 	--memory 8
