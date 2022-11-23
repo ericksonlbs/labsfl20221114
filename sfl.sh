@@ -104,10 +104,10 @@ execute() {
 
         file="$prefix-execution.csv"
         if [ ! -f "$file" ]; then
-            echo "application;execution;number;build;flacoco;build+flacoco;jaguar;build+jaguar;build with jaguar2;total time" >> "$file"
+            echo "application;execution;number;build;flacoco;jaguar;build+flacoco;build+jaguar;build with jaguar2;gzoltar;total time" >> "$file"
         fi
 
-        echo "${PWD##*/};$guid;$i of $repeat;$build;$flacoco;$buildFlacoco;$jaguar;$buildJaguar;$jaguar2;$gzoltar;$runtime" >> "$file"
+        echo "${PWD##*/};$guid;$i of $repeat;$build;$flacoco;$jaguar;$buildFlacoco;$buildJaguar;$jaguar2;$gzoltar;$runtime" >> "$file"
     done
 }
 
