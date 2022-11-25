@@ -44,10 +44,19 @@ RUN mvn clean install -Dmaven.test.skip
 WORKDIR /
 RUN rm -rf gzoltar
 
+#prepare dotnet-sfl-tool
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN rm packages-microsoft-prod.deb
+RUN apt-get update && apt-get install -y dotnet-sdk-6.0
+COPY dotnet-sfl-tool labsfl20221114/dotnet-sfl-tool
+WORKDIR /labsfl20221114/dotnet-sfl-tool
+RUN dotnet build
+
 #copy files
-COPY projects labsfl20221114/projects
-COPY run.sh labsfl20221114
-COPY sfl.sh labsfl20221114
+COPY projects /labsfl20221114/projects
+COPY run.sh /labsfl20221114
+COPY sfl.sh /labsfl20221114
 
 #set workdir
 WORKDIR /labsfl20221114
