@@ -35,12 +35,13 @@ cd "$PATHLOCAL" || exit
 echo "execution Collections25b"  >> "$LOGFILE"
 #Execute Collections - version 25b Defects4J
 bash ./sfl.sh projects/Collections25b "$REPEAT" >> "$LOGFILE"
-cd "$PATHLOCAL" || exit
 
-cd "$PATHLOCAL/test" || exit
+cd "$PATHLOCAL"/dotnet-sfl-tool/ || exit
+dotnet run --inputPath /labsfl20221114/test --outputPath /labsfl20221114/test/normalized/
 
 timeNow=$(date +%Y-%m-%d_%H-%M-%S)
-
 zip -r "$PATHLOCAL/test/log-$timeNow.zip" "$PATHLOCAL/test/" -x "*.zip"
 
+cd "$PATHLOCAL"/test/ || exit
 rm ./*.csv ./*.xml ./*.txt
+rm -rf normalized
