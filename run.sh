@@ -44,3 +44,4 @@ zip -r "$PATHLOCAL/test/log-$timeNow.zip" "$PATHLOCAL/test/" -x "*.zip"
 
 cd "$PATHLOCAL"/test/ || exit
 rm ./*.csv ./*.xml ./*.txt
+rm -rf normalized
