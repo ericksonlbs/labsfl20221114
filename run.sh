@@ -7,35 +7,19 @@ if [ ! -d "$PWD/test/" ]; then
         mkdir "$PWD/test/"
 fi
 
-echo "execution Csv1b"  >> "$LOGFILE"
-#Execute Csv - version 1b Defects4J
-bash ./sfl.sh projects/Csv1b "$REPEAT" >> "$LOGFILE"
-cd "$PATHLOCAL" || exit
+for proj in 'JacksonDatabind80b' 'Math104b' 'JacksonXML2b' 'Compress47b' 'Codec18b' 'Csv1b' 'Jsoup93b' 'Time1b' 'Gson18b' 'Lang1b' 'Collections25b'
+do
+    echo "execution $proj"  >> "$LOGFILE"
 
-echo "execution Jsoup1b"  >> "$LOGFILE"
-#Execute Jsoup - version 1b Defects4J
-bash ./sfl.sh projects/Jsoup1b "$REPEAT" >> "$LOGFILE"
-cd "$PATHLOCAL" || exit
+    if [ $proj = 'Gson18b' ]; then
+        bash ./sfl.sh "projects/$proj/gson" "$REPEAT" >> "$LOGFILE"    
+    else
+        bash ./sfl.sh "projects/$proj" "$REPEAT" >> "$LOGFILE"    
+    fi
 
-echo "execution Time1b"  >> "$LOGFILE"
-#Execute Time - version 1b Defects4J
-bash ./sfl.sh projects/Time1b "$REPEAT" >> "$LOGFILE"
-cd "$PATHLOCAL" || exit
-
-echo "execution Gson1b"  >> "$LOGFILE"
-#Execute Gson - version 1b Defects4J
-bash ./sfl.sh projects/Gson1b/gson "$REPEAT" >> "$LOGFILE"
-cd "$PATHLOCAL" || exit
-
-echo "execution Lang1b"  >> "$LOGFILE"
-#Execute Lang - version 1b Defects4J
-bash ./sfl.sh projects/Lang1b "$REPEAT" >> "$LOGFILE"
-cd "$PATHLOCAL" || exit
-    
-echo "execution Collections25b"  >> "$LOGFILE"
-#Execute Collections - version 25b Defects4J
-bash ./sfl.sh projects/Collections25b "$REPEAT" >> "$LOGFILE"
-
+    cd "$PATHLOCAL" || exit
+done
+   
 cd "$PATHLOCAL"/dotnet-sfl-tool/ || exit
 dotnet run --inputPath /labsfl20221114/test --outputPath /labsfl20221114/test/normalized/
 
@@ -43,5 +27,5 @@ timeNow=$(date +%Y-%m-%d_%H-%M-%S)
 zip -r "$PATHLOCAL/test/log-$timeNow.zip" "$PATHLOCAL/test/" -x "*.zip"
 
 cd "$PATHLOCAL"/test/ || exit
-rm ./*.csv ./*.xml ./*.txt
+rm ./*.csv ./*.xml ./*.txt ./*.ser
 rm -rf normalized
