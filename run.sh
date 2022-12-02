@@ -21,7 +21,8 @@ do
 done
    
 cd "$PATHLOCAL"/dotnet-sfl-tool/ || exit
-dotnet run --inputPath /labsfl20221114/test --outputPath /labsfl20221114/test/normalized/
+dotnet run --inputPath /labsfl20221114/test --outputPath /labsfl20221114/test/normalized/byClass --order class
+dotnet run --inputPath /labsfl20221114/test --outputPath /labsfl20221114/test/normalized/byScore --order score
 
 timeNow=$(date +%Y-%m-%d_%H-%M-%S)
 zip -r "$PATHLOCAL/test/log-$timeNow.zip" "$PATHLOCAL/test/" -x "*.zip"
