@@ -45,7 +45,8 @@ execute() {
         end=$(date +%s%N)
 
         build=$(((end - start) / nanoToMili))
-
+                
+        echo "init flacoco sfl - path: $path - $i of $repeat"
         #flacoco sfl
         start=$(date +%s%N)
         java -Xms7168m -Xmx7168m -jar ~/.m2/repository/com/github/spoonlabs/flacoco/1.0.6-SNAPSHOT/flacoco-1.0.6-SNAPSHOT-jar-with-dependencies.jar \
@@ -56,6 +57,7 @@ execute() {
         flacoco=$(((end - start) / nanoToMili))
         sort --field-separator=',' --key=3 -r "target/flacoco.csv" > "$prefix-$i-flacoco.csv"
 
+        echo "init jaguar sfl - path: $path - $i of $repeat"
         #jaguar sfl
         start=$(date +%s%N)
         PROJECT_DIR="$PWD"
@@ -80,34 +82,42 @@ execute() {
 
         mvn clean
 
+
+        echo "init jaguar2 - path: $path - $i of $repeat"
         #jaguar2
         start=$(date +%s%N)
         mvn -f pom-jaguar.xml verify
         end=$(date +%s%N)
         jaguar2=$(((end - start) / nanoToMili))
-        sort --field-separator=',' --key=7 -r "target/jaguar2.csv" > "$prefix-$i-jaguar2.csv"
+        cp "target/jaguar2.csv" "$prefix-$i-jaguar2.csv"
 
         mvn clean
-
+        
+        echo "init gzoltar - path: $path - $i of $repeat"
         #gzoltar
         start=$(date +%s%N)
         mvn -f pom-gzoltar.xml verify
+        end=$(date +%s%N)
+        gzoltarVerify=$(((end - start) / nanoToMili))
+        start=$(date +%s%N)
         mvn -f pom-gzoltar.xml gzoltar:fl-report
         end=$(date +%s%N)
-        gzoltar=$(((end - start) / nanoToMili))
-        sort --field-separator=';' --key=2 -r "target/site/gzoltar/sfl/txt/ochiai.ranking.csv" > "$prefix-$i-gzoltar.ochiai.ranking.csv"
+        gzoltarReport=$(((end - start) / nanoToMili))
+        cp "target/site/gzoltar/sfl/txt/ochiai.ranking.csv" "$prefix-$i-gzoltar.ochiai.ranking.csv"
+        cp "target/gzoltar.ser" "$prefix-$i-gzoltar.ser"
                       
         end=$(date +%s%N)
         runtime=$(((end - startmain) / nanoToMili))
         buildJaguar=$((build + jaguar))
         buildFlacoco=$((build + flacoco))
+        gzoltar=$((gzoltarVerify + gzoltarReport))
 
         file="$prefix-execution.csv"
         if [ ! -f "$file" ]; then
-            echo "application;execution;number;build;flacoco;jaguar;build+flacoco;build+jaguar;build with jaguar2;gzoltar;total time" >> "$file"
+            echo "application;execution;number;build;flacoco;jaguar;gzoltarVerify;gzoltarReport;build+flacoco;build+jaguar;build with jaguar2;gzoltar;total time" >> "$file"
         fi
 
-        echo "${PWD##*/};$guid;$i of $repeat;$build;$flacoco;$jaguar;$buildFlacoco;$buildJaguar;$jaguar2;$gzoltar;$runtime" >> "$file"
+        echo "${PWD##*/};$guid;$i of $repeat;$build;$flacoco;$jaguar;$gzoltarVerify;$gzoltarReport;$buildFlacoco;$buildJaguar;$jaguar2;$gzoltar;$runtime" >> "$file"
     done
 }
 
