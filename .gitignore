@@ -10,6 +10,11 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+#dotnet project
+.vs
+bin
+obj
+
 # Package Files #
 *.jar
 *.war

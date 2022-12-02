@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace dotnet_sfl_tool.Services
@@ -27,10 +28,12 @@ namespace dotnet_sfl_tool.Services
                     continue;
 
                 string[] columns = item.Split(';');
-
+                
+                var regex = new Regex(Regex.Escape("$"));
+                
                 model.Lines.Add(new SFLLineModel()
                 {
-                    Class = $"{columns[0].Split('$')[0]}.{columns[0].Split('$')[1].Split("#")[0]}",
+                    Class = regex.Replace($"{columns[0].Split("#")[0]}", ".", 1),
                     LineNumber = int.Parse(columns[0].Split(':')[1]),
                     Score = double.Parse(columns[1], CultureInfo.InvariantCulture)
                 });
