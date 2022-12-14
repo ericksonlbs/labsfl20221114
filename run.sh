@@ -7,17 +7,17 @@ if [ ! -d "$PWD/test/" ]; then
         mkdir "$PWD/test/"
 fi
 
-for proj in 'JacksonDatabind80b' 'Math104b' 'JacksonXML2b' 'Compress47b' 'Codec18b' 'Csv1b' 'Jsoup93b' 'Time1b' 'Gson18b' 'Lang1b' 'Collections25b'
+for proj in   'JacksonDatabind80b' 'Gson18b' 'Math104b' 'JacksonXML2b' 'Compress47b' 'Codec18b' 'Csv1b' 'Jsoup93b' 'Time1b' 'Lang1b' 'Collections25b'
 do
     echo "execution $proj"  >> "$LOGFILE"
+    cd "$PATHLOCAL" || exit
 
     if [ $proj = 'Gson18b' ]; then
-        bash ./sfl.sh "projects/$proj/gson" "$REPEAT" >> "$LOGFILE"    
+        bash ./sfl.sh "projects/$proj/gson" "$REPEAT" $proj "$LOGFILE"  >> "$LOGFILE"    
     else
-        bash ./sfl.sh "projects/$proj" "$REPEAT" >> "$LOGFILE"    
+        bash ./sfl.sh "projects/$proj" "$REPEAT" $proj "$LOGFILE"  >> "$LOGFILE"    
     fi
 
-    cd "$PATHLOCAL" || exit
 done
    
 cd "$PATHLOCAL"/dotnet-sfl-tool/ || exit

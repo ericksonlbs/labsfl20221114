@@ -143,6 +143,13 @@ Some data-binding types overridden as well (ObjectMapper sub-classed as XmlMappe
           </properties>
         </configuration>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+            <skip>true</skip>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>com.gzoltar</groupId>
         <artifactId>com.gzoltar.maven</artifactId>
