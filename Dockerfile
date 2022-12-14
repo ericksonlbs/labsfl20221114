@@ -8,7 +8,7 @@ ENV REPEAT=${REPEAT}
 RUN apt-get update -y
 
 # Install dependencies
-RUN apt-get install -y git maven uuid-runtime zip
+RUN apt-get install -y git maven uuid-runtime zip libdbi-perl libtext-csv-perl libdbd-csv-perl libjson-parse-perl
 
 #install Jaguar
 RUN git clone https://github.com/saeg/jaguar
@@ -41,8 +41,14 @@ RUN rm -rf jaguar2
 RUN git clone https://github.com/GZoltar/gzoltar
 WORKDIR /gzoltar
 RUN mvn clean install -Dmaven.test.skip
+RUN mvn clean package -Dmaven.test.skip
 WORKDIR /
-RUN rm -rf gzoltar
+
+#install defects4j
+RUN git clone https://github.com/rjust/defects4j.git
+WORKDIR /defects4j
+RUN ./init.sh
+WORKDIR /
 
 #prepare dotnet-sfl-tool
 RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -57,6 +63,7 @@ RUN dotnet build
 COPY projects /labsfl20221114/projects
 COPY run.sh /labsfl20221114
 COPY sfl.sh /labsfl20221114
+COPY gzoltar.sh /labsfl20221114
 
 #set workdir
 WORKDIR /labsfl20221114
