@@ -35,7 +35,6 @@ az container create \
     --name "labsfl20221114-${INTERNALNAME}" \
     --image ericksonlbs/labsfl20221114:latest \
     --dns-name-label "labsfl20221114-${INTERNALNAME}-aci" \
-    --ports 80 \
     --azure-file-volume-account-name "$ACI_PERS_STORAGE_ACCOUNT_NAME" \
     --azure-file-volume-account-key "$STORAGE_KEY" \
     --azure-file-volume-share-name $ACI_PERS_SHARE_NAME \

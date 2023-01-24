@@ -1,8 +1,18 @@
 #!/bin/sh
+nanoToMili=1000000
+work_dir="$1"
+PID="$2"
+BID="$3"
+COUNT="$4"
+PREFIX="$work_dir/test/${PID}_${BID}b"
+projD4J="$work_dir/projects/${PID}${BID}b"
+RESULT="$work_dir/test/execution.csv"
 
-export _JAVA_OPTIONS="-Xms7168m -Xmx7168m -XX:MaxHeapSize=7168M"
-export MAVEN_OPTS="-Xms7168m -Xmx7168m"
-export ANT_OPTS="-Xms7168m -Xmx7168m -XX:MaxHeapSize=7168M"
+echo "Start GZoltar(CLI) - ${PID}${BID}b - ${COUNT}"
+
+#define MAVEN_OPTS to memory start and limit
+export _JAVA_OPTIONS="-Xmx6144M -XX:MaxHeapSize=4096M"
+export MAVEN_OPTS="-Xmx1024M"
 
 #
 # Configure GZoltar
@@ -11,28 +21,33 @@ export ANT_OPTS="-Xms7168m -Xmx7168m -XX:MaxHeapSize=7168M"
 export GZOLTAR_AGENT_JAR="/gzoltar/com.gzoltar.agent.rt/target/com.gzoltar.agent.rt-1.7.4-SNAPSHOT-all.jar"
 export GZOLTAR_CLI_JAR="/gzoltar/com.gzoltar.cli/target/com.gzoltar.cli-1.7.4-SNAPSHOT-jar-with-dependencies.jar"
 
-#
-# Configure D4J
-#
 
-export D4J_HOME="/defects4j"
-export TZ='America/Los_Angeles' # some D4J's requires this specific TimeZone
+if [ "${PID}" = "Gson" ]; then
+    projD4J="$projD4J/gson"
+fi
 
-work_dir="$1"
-PID="$2"
-BID="$3"
+cd "$projD4J" || exit
 
-# Compile
-cd "$work_dir/$PID-${BID}b" || exit
+#compile first time to cache dependencies
+if [ "${COUNT}" = "1" ]; then
+    mvn compile
+fi
+
+mvn clean
+
+start=$(date +%s%N)
+mvn compile
+end=$(date +%s%N)
+TIMECOMPILE=$(((end - start) / nanoToMili))
 
 
 # Collect metadata
-cd "$work_dir/$PID-${BID}b" || exit
+cd "$projD4J" || exit
 test_classpath=$($D4J_HOME/framework/bin/defects4j export -p cp.test)
 src_classes_dir=$($D4J_HOME/framework/bin/defects4j export -p dir.bin.classes)
-src_classes_dir="$work_dir/$PID-${BID}b/$src_classes_dir"
+src_classes_dir="$projD4J/$src_classes_dir"
 test_classes_dir=$($D4J_HOME/framework/bin/defects4j export -p dir.bin.tests)
-test_classes_dir="$work_dir/$PID-${BID}b/$test_classes_dir"
+test_classes_dir="$projD4J/$test_classes_dir"
 echo "$PID-${BID}b's classpath: $test_classpath" >&2
 echo "$PID-${BID}b's bin dir: $src_classes_dir" >&2
 echo "$PID-${BID}b's test bin dir: $test_classes_dir" >&2
@@ -41,10 +56,11 @@ echo "$PID-${BID}b's test bin dir: $test_classes_dir" >&2
 # Collect unit tests to run GZoltar with
 #
 
-cd "$work_dir/$PID-${BID}b" || exit
-unit_tests_file="$work_dir/$PID-${BID}b/unit_tests.txt"
+cd "$projD4J" || exit
+unit_tests_file="$projD4J/unit_tests.txt"
 relevant_tests="*"  # Note, you might want to consider the set of relevant tests provided by D4J, i.e., $D4J_HOME/framework/projects/$PID/relevant_tests/$BID
 
+start=$(date +%s%N)
 java -cp "$test_classpath:$test_classes_dir:$D4J_HOME/framework/projects/lib/junit-4.11.jar:$GZOLTAR_CLI_JAR" \
   com.gzoltar.cli.Main listTestMethods \
     "$test_classes_dir" \
@@ -57,7 +73,7 @@ head "$unit_tests_file"
 # Note: the `sed` commands below might not work on BSD-based distributions such as MacOS.
 #
 
-cd "$work_dir/$PID-${BID}b" || exit
+cd "$projD4J" || exit
 
 loaded_classes_file="$D4J_HOME/framework/projects/$PID/loaded_classes/$BID.src"
 normal_classes=$(cat "$loaded_classes_file" | sed 's/$/:/' | sed ':a;N;$!ba;s/\n//g')
@@ -69,9 +85,9 @@ echo "Likely faulty classes: $classes_to_debug" >&2
 # Run GZoltar
 #
 
-cd "$work_dir/$PID-${BID}b" || exit
+cd "$projD4J" || exit
 
-ser_file="$work_dir/$PID-${BID}b/gzoltar.ser"
+ser_file="$projD4J/gzoltar.ser"
 java -XX:MaxPermSize=4096M -javaagent:$GZOLTAR_AGENT_JAR=destfile=$ser_file,buildlocation=$src_classes_dir,includes=$classes_to_debug,excludes="",inclnolocationclasses=false,output="FILE" \
   -cp "$src_classes_dir:$D4J_HOME/framework/projects/lib/junit-4.11.jar:$test_classpath:$GZOLTAR_CLI_JAR" \
   com.gzoltar.cli.Main runTestMethods \
@@ -82,7 +98,7 @@ java -XX:MaxPermSize=4096M -javaagent:$GZOLTAR_AGENT_JAR=destfile=$ser_file,buil
 # Generate fault localization report
 #
 
-cd "$work_dir/$PID-${BID}b" || exit
+cd "$projD4J" || exit
 
 java -cp "$src_classes_dir:$D4J_HOME/framework/projects/lib/junit-4.11.jar:$test_classpath:$GZOLTAR_CLI_JAR" \
     com.gzoltar.cli.Main faultLocalizationReport \
@@ -92,8 +108,25 @@ java -cp "$src_classes_dir:$D4J_HOME/framework/projects/lib/junit-4.11.jar:$test
       --inclStaticConstructors \
       --inclDeprecatedMethods \
       --dataFile "$ser_file" \
-      --outputDirectory "$work_dir/$PID-${BID}b/target/" \
+      --outputDirectory "$projD4J/target/" \
       --family "sfl" \
       --formula "ochiai" \
       --metric "entropy" \
       --formatter "txt"
+end=$(date +%s%N)
+TIMECLI=$(((end - start) / nanoToMili))
+fileGenerated="false"
+if [ -f "target/jaguar2.csv" ]; then
+    myfilesize=$(stat --format=%s "target/jaguar2.csv")
+    if [ "${myfilesize}" != "0" ]; then
+        fileGenerated="true"
+    fi
+fi
+if [ ! -f "$RESULT" ]; then
+    echo "application;project;bug id;count;compile;execution;sum;fileGenerated" >> "$RESULT"
+fi
+echo "GZoltarCLI;$PID;$BID;$COUNT;$TIMECOMPILE;$TIMECLI;$((TIMECOMPILE + TIMECLI));$fileGenerated" >> "$RESULT"
+
+cp "$projD4J/target/sfl/txt/ochiai.ranking.csv" "$PREFIX-$COUNT-cli-gzoltar.ochiai.ranking.csv"
+
+echo "Final GZoltar(CLI) - ${PID}${BID}b - ${COUNT}"

@@ -63,7 +63,11 @@ RUN dotnet build
 COPY projects /labsfl20221114/projects
 COPY run.sh /labsfl20221114
 COPY sfl.sh /labsfl20221114
-COPY gzoltar.sh /labsfl20221114
+COPY gzoltarMaven.sh /labsfl20221114
+COPY gzoltarCLI.sh /labsfl20221114
+COPY jaguar.sh /labsfl20221114
+COPY jaguar2.sh /labsfl20221114
+COPY flacoco.sh /labsfl20221114
 
 #set workdir
 WORKDIR /labsfl20221114

@@ -5,7 +5,9 @@ execute() {
     guid=$(uuidgen)
     proj=$3
     #define MAVEN_OPTS to memory start and limit
-    export MAVEN_OPTS="-Xms7168m -Xmx7168m"
+    export _JAVA_OPTIONS="-Xmx6144M -XX:MaxHeapSize=4096M"
+    export MAVEN_OPTS="-Xmx1024M"
+    export ANT_OPTS="-Xmx6144M -XX:MaxHeapSize=4096M"
     
     resultPath="$PWD/test"
 
