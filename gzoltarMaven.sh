@@ -6,7 +6,7 @@ PID="$2"
 BID="$3"
 COUNT="$4"
 PREFIX="$work_dir/test/${PID}_${BID}b"
-projD4J="$work_dir/projects/${PID}${BID}b"
+projD4J="$work_dir/projects/${PID}${BID}"
 RESULT="$work_dir/test/execution.csv"
 
 
@@ -21,10 +21,6 @@ export _JAVA_OPTIONS="-Xmx6144M -XX:MaxHeapSize=4096M"
 export MAVEN_OPTS="-Xmx6144M"
 
 cd "$projD4J" || exit
-#compile first time to cache dependencies
-if [ "${COUNT}" = "1" ]; then
-    mvn -f pom-gzoltar.xml compile
-fi
 
 mvn clean
 
@@ -38,12 +34,21 @@ mvn -f pom-gzoltar.xml gzoltar:fl-report
 end=$(date +%s%N)
 TIMECLI=$(((end - start) / nanoToMili))
 fileGenerated="false"
-if [ -f "target/jaguar2.csv" ]; then
-    myfilesize=$(stat --format=%s "target/jaguar2.csv")
+
+nameFileGenerated="target/site/gzoltar/sfl/txt/ochiai.ranking.csv" 
+
+
+if [ -f "$nameFileGenerated" ]; then
+    myfilesize=$(stat --format=%s "$nameFileGenerated")
+    size=$(wc -l "$nameFileGenerated")
     if [ "${myfilesize}" != "0" ]; then
-        fileGenerated="true"
+        if [ "${size}" != "1 $nameFileGenerated" ]; then
+            fileGenerated="true"
+        fi
     fi
 fi
+
+ 
 if [ ! -f "$RESULT" ]; then
     echo "application;project;bug id;count;compile;execution;sum;fileGenerated" >> "$RESULT"
 fi

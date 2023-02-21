@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.fasterxml.jackson.databind.seq.SequenceWriterTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 sec - in com.fasterxml.jackson.databind.seq.SequenceWriterTest

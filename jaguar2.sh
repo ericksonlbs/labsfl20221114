@@ -6,7 +6,7 @@ PID="$2"
 BID="$3"
 COUNT="$4"
 PREFIX="$work_dir/test/${PID}_${BID}b"
-projD4J="$work_dir/projects/${PID}${BID}b"
+projD4J="$work_dir/projects/${PID}${BID}"
 RESULT="$work_dir/test/execution.csv"
 
 echo "Start Jaguar2 - ${PID}${BID}b - ${COUNT}"
@@ -20,21 +20,22 @@ fi
 
 cd "$projD4J" || exit
 
-#compile first time to cache dependencies
-if [ "${COUNT}" = "1" ]; then
-    mvn -f pom-jaguar.xml compile
-fi
-
 mvn clean
 start=$(date +%s%N)
 mvn -f pom-jaguar.xml verify
 end=$(date +%s%N)
 TIMECLI=$(((end - start) / nanoToMili))
 fileGenerated="false"
-if [ -f "target/jaguar2.csv" ]; then
-    myfilesize=$(stat --format=%s "target/jaguar2.csv")
+
+nameFileGenerated="target/jaguar2.csv" 
+
+if [ -f "$nameFileGenerated" ]; then
+    myfilesize=$(stat --format=%s "$nameFileGenerated")
+    size=$(wc -l "$nameFileGenerated")
     if [ "${myfilesize}" != "0" ]; then
-        fileGenerated="true"
+        if [ "${size}" != "1 $nameFileGenerated" ]; then
+            fileGenerated="true"
+        fi
     fi
 fi
 

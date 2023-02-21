@@ -3,6 +3,8 @@ FROM openjdk:8
 
 #Amount repetitions for each project
 ENV REPEAT=${REPEAT}
+ENV REPEAT=${TOOL}
+ENV REPEAT=${PROJECT}
 
 # Update aptitude with new repo
 RUN apt-get update -y
@@ -68,6 +70,7 @@ COPY gzoltarCLI.sh /labsfl20221114
 COPY jaguar.sh /labsfl20221114
 COPY jaguar2.sh /labsfl20221114
 COPY flacoco.sh /labsfl20221114
+COPY verify.sh /labsfl20221114
 
 #set workdir
 WORKDIR /labsfl20221114

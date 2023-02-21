@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.fasterxml.jackson.databind.creators.ImplicitNameMatch792Test
--------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 sec - in com.fasterxml.jackson.databind.creators.ImplicitNameMatch792Test
