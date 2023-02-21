@@ -9,7 +9,7 @@ To running this laboratory it is possible to build container image through this 
 ## Compiling and running the container locally via this git repository
 STEP 1: Clone repository
 ```
-git clone https://anonymous.4open.science/r/labsfl20221114-anonymous
+git clone https://anonymous.4open.science/r/labsfl20221114-anonymized
 ```
 
 STEP 2: Enter on path
