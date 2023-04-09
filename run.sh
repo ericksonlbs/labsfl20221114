@@ -78,17 +78,6 @@ runProject()
         {   
             mvn clean            
             if [ -z "${TOOL}" ] || [ "${TOOL}" = "VERIFY" ]; then
-                # start=$(date +%s%N)
-                # mvn verify
-                # end=$(date +%s%N)
-                # TIME=$(((end - start) / nanoToMili))
-                # mvn clean
-
-                # if [ ! -f "$RESULT" ]; then
-                #     echo "application;project;bug id;count;compile;execution;sum;fileGenerated" >>"$RESULT"
-                # fi
-                # echo "Verify;$proj;$version;$i;$TIME;0;$TIME;true" >>"$RESULT"
-
                 bash "$path/verify.sh" "$path" "$proj" "$version" "$i" "$D4J_HOME"
             fi
             if [ -z "${TOOL}" ] || [ "${TOOL}" = "JAGUAR" ]; then
