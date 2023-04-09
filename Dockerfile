@@ -64,7 +64,6 @@ RUN dotnet build
 #copy files
 COPY projects /labsfl20221114/projects
 COPY run.sh /labsfl20221114
-COPY sfl.sh /labsfl20221114
 COPY gzoltarMaven.sh /labsfl20221114
 COPY gzoltarCLI.sh /labsfl20221114
 COPY jaguar.sh /labsfl20221114
